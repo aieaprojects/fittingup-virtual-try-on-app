@@ -1,0 +1,179 @@
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Upload, X, Image as ImageIcon, Camera } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { SUPPORTED_FORMATS, MAX_FILE_SIZE } from '../config';
+import { designTokens } from '../styles/design-tokens';
+
+interface ImageUploadProps {
+  onFileSelect: (file: File) => void;
+  accept?: string;
+  maxSize?: number;
+  className?: string;
+  preview?: string;
+  onClearPreview?: () => void;
+}
+
+export default function ImageUpload({
+  onFileSelect,
+  accept,
+  maxSize = MAX_FILE_SIZE,
+  className = '',
+  preview,
+  onClearPreview,
+}: ImageUploadProps) {
+  const [dragActive, setDragActive] = useState(false);
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        onFileSelect(acceptedFiles[0]);
+      }
+    },
+    [onFileSelect]
+  );
+
+  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
+    onDrop,
+    accept: accept ? { [accept]: [] } : {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/webp': ['.webp'],
+    },
+    maxSize,
+    multiple: false,
+    onDragEnter: () => setDragActive(true),
+    onDragLeave: () => setDragActive(false),
+  });
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  if (preview) {
+    return (
+      <div className={`relative ${className}`}>
+        <div className="relative group">
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-full h-72 object-cover transition-all duration-300"
+            style={{ 
+              borderRadius: designTokens.radius.xl,
+              border: `2px solid ${designTokens.colors.stone}`,
+              boxShadow: designTokens.shadows.md
+            }}
+          />
+          
+          {/* Elegant overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl" />
+          
+          {onClearPreview && (
+            <Button
+              size="sm"
+              className="absolute top-3 right-3 transition-all duration-300 hover:scale-110"
+              onClick={onClearPreview}
+              style={{
+                background: `${designTokens.colors.pure}95`,
+                color: designTokens.colors.charcoal,
+                borderRadius: designTokens.radius.lg,
+                boxShadow: designTokens.shadows.lg,
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={className}>
+      <div
+        {...getRootProps()}
+        className="cursor-pointer transition-all duration-300 hover:scale-[1.01]"
+        style={{
+          border: `2px dashed ${isDragActive || dragActive ? designTokens.colors.sage : designTokens.colors.stone}`,
+          borderRadius: designTokens.radius.xl,
+          backgroundColor: isDragActive || dragActive 
+            ? `${designTokens.colors.sage}10` 
+            : designTokens.colors.ivory,
+          padding: '3rem 2rem',
+          boxShadow: isDragActive || dragActive ? designTokens.shadows.md : 'none'
+        }}
+      >
+        <input {...getInputProps()} />
+        
+        <div className="text-center space-y-6">
+          <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
+               style={{ 
+                 background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)` 
+               }}>
+            {isDragActive ? (
+              <Upload className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
+            ) : (
+              <Camera className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-xl font-semibold"
+               style={{ 
+                 fontFamily: designTokens.typography.heading,
+                 color: designTokens.colors.charcoal 
+               }}>
+              {isDragActive ? 'Drop image here' : 'Upload an image'}
+            </p>
+            <p className="text-base leading-relaxed"
+               style={{ color: designTokens.colors.slate }}>
+              Drag & drop or click to select
+            </p>
+          </div>
+          
+          <div className="space-y-1"
+               style={{ color: designTokens.colors.ash }}>
+            <p className="text-sm">Supported formats: JPEG, PNG, WebP</p>
+            <p className="text-sm">Maximum size: {formatFileSize(maxSize)}</p>
+          </div>
+        </div>
+      </div>
+
+      {fileRejections.length > 0 && (
+        <div className="mt-6 p-4"
+             style={{ 
+               backgroundColor: `${designTokens.colors.error}15`,
+               border: `1px solid ${designTokens.colors.error}`,
+               borderRadius: designTokens.radius.lg
+             }}>
+          <p className="text-sm font-semibold mb-2"
+             style={{ color: designTokens.colors.charcoal }}>
+            Upload Error:
+          </p>
+          {fileRejections.map(({ file, errors }) => (
+            <div key={file.name} className="mt-2">
+              <p className="text-sm font-medium"
+                 style={{ color: designTokens.colors.charcoal }}>
+                {file.name}:
+              </p>
+              <ul className="mt-1 ml-4 space-y-1">
+                {errors.map((error) => (
+                  <li key={error.code} 
+                      className="text-sm"
+                      style={{ color: designTokens.colors.slate }}>
+                    • {error.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
