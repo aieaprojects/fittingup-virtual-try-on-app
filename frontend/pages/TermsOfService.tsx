@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { designTokens, styleHelpers } from '../styles/design-tokens';
 
@@ -12,7 +12,6 @@ export default function TermsOfService() {
     <div className="min-h-screen pt-8 pb-24 px-6"
          style={{ background: styleHelpers.gradients.warm }}>
       <div className="max-w-2xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button 
             variant="outline" 
@@ -32,7 +31,6 @@ export default function TermsOfService() {
           </Button>
         </div>
 
-        {/* Title Section */}
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tight"
               style={{ 
@@ -40,18 +38,17 @@ export default function TermsOfService() {
                 color: designTokens.colors.charcoal,
                 letterSpacing: '-0.02em'
               }}>
-            Terms of Service
+            Fitvue – Terms of Use
           </h1>
           <p className="text-base leading-relaxed"
              style={{ 
                color: designTokens.colors.slate,
                fontFamily: designTokens.typography.body
              }}>
-            Your agreement for using Clozet
+            Last Updated: [3/10/25]
           </p>
         </div>
 
-        {/* Content */}
         <Card className="overflow-hidden"
               style={{ 
                 background: designTokens.colors.pure,
@@ -59,105 +56,70 @@ export default function TermsOfService() {
                 borderRadius: designTokens.radius.xl,
                 boxShadow: designTokens.shadows.lg
               }}>
-          <CardHeader className="pb-4">
-            <div className="text-center">
-              <p className="text-sm"
-                 style={{ 
-                   color: designTokens.colors.slate,
-                   fontFamily: designTokens.typography.body
-                 }}>
-                Effective Date: September 17, 2025
-              </p>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="space-y-8 pt-0">
+          <CardContent className="space-y-8 pt-8">
             <div className="prose prose-neutral max-w-none">
               <div className="space-y-6">
+                <p className="text-base leading-relaxed"
+                   style={{ 
+                     color: designTokens.colors.charcoal,
+                     fontFamily: designTokens.typography.body
+                   }}>
+                  Welcome to Fitvue. These Terms of Use govern your access to and use of the Fitvue mobile application and website ("App"). By downloading, accessing, or using the App, you agree to these Terms and Apple's Standard End User License Agreement (EULA). If you do not agree, do not use the App.
+                </p>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
                 <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    1. License Grant and Restrictions
+                  </h2>
                   <p className="text-base leading-relaxed mb-4"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    By using Clozet, you agree to these Terms of Service.
+                    You are granted a non-transferable, limited, and revocable license to use Fitvue solely for personal, non-commercial purposes on Apple-branded devices you own or control.
                   </p>
-                </div>
-
-                <div>
-                  <h2 className="text-xl font-semibold mb-4"
-                      style={{ 
-                        fontFamily: designTokens.typography.heading,
-                        color: designTokens.colors.charcoal,
-                        letterSpacing: '-0.02em'
-                      }}>
-                    1. Use of the App
-                  </h2>
-                  <ul className="space-y-2 ml-4">
+                  <p className="text-base leading-relaxed mb-2"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    You may not:
+                  </p>
+                  <ul className="space-y-2 ml-6 list-disc">
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      You must be at least 13 years old to use the app.
+                      rent, lease, sublicense, sell, or redistribute the App;
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      You agree to use the app for personal, non-commercial purposes only.
+                      copy, reverse engineer, or attempt to derive source code;
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      You are responsible for the content you upload. Do not upload unlawful, harmful, or copyrighted materials.
+                      use the App in any manner not permitted by these Terms or applicable law.
                     </li>
                   </ul>
                 </div>
 
-                <div>
-                  <h2 className="text-xl font-semibold mb-4"
-                      style={{ 
-                        fontFamily: designTokens.typography.heading,
-                        color: designTokens.colors.charcoal,
-                        letterSpacing: '-0.02em'
-                      }}>
-                    2. Subscriptions & Payments
-                  </h2>
-                  <ul className="space-y-2 ml-4">
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      Clozet offers subscription tiers that provide a set number of image generations ("credits").
-                    </li>
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      Payments are processed via the Apple App Store and Google Play Store.
-                    </li>
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      All subscriptions automatically renew unless canceled at least 24 hours before renewal.
-                    </li>
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      To cancel, you must use your Apple/Google account settings.
-                    </li>
-                  </ul>
-                </div>
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -166,32 +128,42 @@ export default function TermsOfService() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    3. Credits & Usage
+                    2. Subscriptions and Payments
                   </h2>
-                  <ul className="space-y-2 ml-4">
+                  <p className="text-base leading-relaxed mb-4"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    Fitvue offers auto-renewable subscription plans: Starter, Premium, and Exclusive. Subscriptions are billed monthly through your Apple ID account.
+                  </p>
+                  <ul className="space-y-2 ml-6 list-disc">
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      Each image generation consumes one credit.
+                      Subscriptions renew automatically unless canceled at least 24 hours before the current billing period ends.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      If you exceed your credits, you will be prompted to upgrade.
+                      You can manage and cancel subscriptions in your Apple ID account settings after purchase.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      Credits reset monthly according to your plan.
+                      Payment will be charged to your Apple ID account upon confirmation of purchase.
                     </li>
                   </ul>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -200,43 +172,19 @@ export default function TermsOfService() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    4. Intellectual Property
-                  </h2>
-                  <ul className="space-y-2 ml-4">
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      Generated images are for your personal use.
-                    </li>
-                    <li className="text-base leading-relaxed"
-                        style={{ 
-                          color: designTokens.colors.charcoal,
-                          fontFamily: designTokens.typography.body
-                        }}>
-                      Clozet retains ownership of the app and its technology.
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h2 className="text-xl font-semibold mb-4"
-                      style={{ 
-                        fontFamily: designTokens.typography.heading,
-                        color: designTokens.colors.charcoal,
-                        letterSpacing: '-0.02em'
-                      }}>
-                    5. Limitation of Liability
+                    3. Account Responsibilities
                   </h2>
                   <p className="text-base leading-relaxed"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    The app is provided "as is." We are not liable for damages arising from the use of AI-generated images.
+                    You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account. You agree to provide accurate information and to promptly update it as necessary.
                   </p>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -245,16 +193,19 @@ export default function TermsOfService() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    6. Modifications
+                    4. Content Ownership and Usage
                   </h2>
                   <p className="text-base leading-relaxed"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    We may update these Terms at any time. Updates will be posted in the app.
+                    Generated images, previews, and outputs created through Fitvue are licensed to you for personal use only. You may not resell, redistribute, or commercially exploit them.
                   </p>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -263,16 +214,125 @@ export default function TermsOfService() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    7. Contact
+                    5. Data and Privacy
                   </h2>
                   <p className="text-base leading-relaxed"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    For questions, contact us at: <a href="mailto:marketing@fitvueapp.com" className="font-semibold hover:underline">marketing@fitvueapp.com</a>
+                    By using Fitvue, you agree that certain technical data and usage information may be collected (such as device type, system performance, and error logs) to help improve the App. For details, please review our Privacy Policy.
                   </p>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    6. Termination
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    We may suspend or terminate your account or access to the App at any time if you violate these Terms. Termination does not affect any rights or obligations accrued prior to termination.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    7. Disclaimer of Warranties
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    The App is provided "as is" and "as available", without warranties of any kind. We do not guarantee that the App will be error-free, uninterrupted, or that it will meet your requirements.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    8. Limitation of Liability
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    To the maximum extent permitted by law, Fitvue and its affiliates shall not be liable for any indirect, incidental, or consequential damages arising from your use of the App.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    9. Governing Law
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    These Terms shall be governed by and construed in accordance with the laws of California, USA, without regard to its conflict of law principles. Local consumer protection laws may still apply.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    10. Contact Information
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    For any questions or concerns about these Terms, please contact us at:<br />
+                    Email: <a href="mailto:marketing@fitvueapp.com" className="font-semibold hover:underline">marketing@fitvueapp.com</a>
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
               </div>
             </div>
           </CardContent>
