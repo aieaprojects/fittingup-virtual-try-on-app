@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { designTokens, styleHelpers } from '../styles/design-tokens';
 
@@ -12,7 +12,6 @@ export default function PrivacyPolicy() {
     <div className="min-h-screen pt-8 pb-24 px-6"
          style={{ background: styleHelpers.gradients.warm }}>
       <div className="max-w-2xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button 
             variant="outline" 
@@ -32,7 +31,6 @@ export default function PrivacyPolicy() {
           </Button>
         </div>
 
-        {/* Title Section */}
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tight"
               style={{ 
@@ -40,18 +38,17 @@ export default function PrivacyPolicy() {
                 color: designTokens.colors.charcoal,
                 letterSpacing: '-0.02em'
               }}>
-            Privacy Policy
+            Fitvue – Privacy Policy
           </h1>
           <p className="text-base leading-relaxed"
              style={{ 
                color: designTokens.colors.slate,
                fontFamily: designTokens.typography.body
              }}>
-            How we protect and handle your information
+            Last Updated: [Insert Date]
           </p>
         </div>
 
-        {/* Content */}
         <Card className="overflow-hidden"
               style={{ 
                 background: designTokens.colors.pure,
@@ -59,31 +56,19 @@ export default function PrivacyPolicy() {
                 borderRadius: designTokens.radius.xl,
                 boxShadow: designTokens.shadows.lg
               }}>
-          <CardHeader className="pb-4">
-            <div className="text-center">
-              <p className="text-sm"
-                 style={{ 
-                   color: designTokens.colors.slate,
-                   fontFamily: designTokens.typography.body
-                 }}>
-                Effective Date: September 17, 2025
-              </p>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="space-y-8 pt-0">
+          <CardContent className="space-y-8 pt-8">
             <div className="prose prose-neutral max-w-none">
               <div className="space-y-6">
-                <div>
-                  <p className="text-base leading-relaxed mb-4"
-                     style={{ 
-                       color: designTokens.colors.charcoal,
-                       fontFamily: designTokens.typography.body
-                     }}>
-                    Clozet ("the App," "we," "us," or "our") is committed to protecting your privacy. 
-                    This Privacy Policy explains how we collect, use, and safeguard your information when you use our app.
-                  </p>
-                </div>
+                <p className="text-base leading-relaxed"
+                   style={{ 
+                     color: designTokens.colors.charcoal,
+                     fontFamily: designTokens.typography.body
+                   }}>
+                  At Fitvue, we respect your privacy. This Privacy Policy explains how we collect, use, and protect your information when you use our mobile application and website ("App").
+                </p>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -94,37 +79,47 @@ export default function PrivacyPolicy() {
                       }}>
                     1. Information We Collect
                   </h2>
-                  <ul className="space-y-2 ml-4">
+                  <p className="text-base leading-relaxed mb-4"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    When you use Fitvue, we may collect:
+                  </p>
+                  <ul className="space-y-2 ml-6 list-disc">
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Account Information:</strong> Email address, profile details when you sign up.
+                      <strong>Account Information:</strong> such as your email address and subscription details when you sign up.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Images:</strong> Avatars and outfit photos you upload for virtual try-on.
+                      <strong>Uploaded Content:</strong> images you upload (garments and model photos) to generate virtual try-ons.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Usage Data:</strong> Analytics data on how you use the app (e.g., features, subscriptions).
+                      <strong>Usage Data:</strong> interactions with the App, device type, IP address, and performance logs.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Payments:</strong> Subscription payments are handled securely through Apple App Store and Google Play Store. We do not store your credit card details.
+                      <strong>Payment Information:</strong> handled securely by Apple through your Apple ID account. Fitvue does not store or process payment details.
                     </li>
                   </ul>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -135,38 +130,55 @@ export default function PrivacyPolicy() {
                       }}>
                     2. How We Use Your Information
                   </h2>
-                  <ul className="space-y-2 ml-4">
+                  <p className="text-base leading-relaxed mb-4"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    We use your information to:
+                  </p>
+                  <ul className="space-y-2 ml-6 list-disc">
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      To create your avatars and generate try-on images using AI (Gemini/NanoBanana).
+                      Provide and improve the Fitvue service.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      To provide, personalize, and improve the app experience.
+                      Generate previews and outputs based on your uploads.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      To manage subscriptions, upgrades, and account access.
+                      Manage subscriptions and deliver paid features.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      To comply with legal obligations.
+                      Communicate updates, features, and support information.
+                    </li>
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      Ensure compliance with legal obligations.
                     </li>
                   </ul>
                 </div>
 
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
                       style={{ 
@@ -174,50 +186,35 @@ export default function PrivacyPolicy() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    3. Sharing of Information
+                    3. Data Storage and Retention
                   </h2>
-                  <ul className="space-y-2 ml-4">
+                  <ul className="space-y-2 ml-6 list-disc">
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Third-Party Services:</strong> We use Google's Gemini AI API to generate images. Uploaded images are processed securely through their service.
+                      Uploaded images are stored temporarily to generate results and may be deleted automatically after processing.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Analytics:</strong> We may use analytics providers to improve the app.
+                      User account and subscription data are retained as long as your account is active or as required by law.
                     </li>
                     <li className="text-base leading-relaxed"
                         style={{ 
                           color: designTokens.colors.charcoal,
                           fontFamily: designTokens.typography.body
                         }}>
-                      <strong>Legal:</strong> We may disclose information if required by law.
+                      We take reasonable security measures to protect your data but cannot guarantee absolute security.
                     </li>
                   </ul>
                 </div>
 
-                <div>
-                  <h2 className="text-xl font-semibold mb-4"
-                      style={{ 
-                        fontFamily: designTokens.typography.heading,
-                        color: designTokens.colors.charcoal,
-                        letterSpacing: '-0.02em'
-                      }}>
-                    4. Data Retention
-                  </h2>
-                  <p className="text-base leading-relaxed"
-                     style={{ 
-                       color: designTokens.colors.charcoal,
-                       fontFamily: designTokens.typography.body
-                     }}>
-                    We retain your data only as long as necessary to provide the service. You may delete your account and associated data at any time.
-                  </p>
-                </div>
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -226,16 +223,35 @@ export default function PrivacyPolicy() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    5. Security
+                    4. Sharing of Information
                   </h2>
-                  <p className="text-base leading-relaxed"
+                  <p className="text-base leading-relaxed mb-4"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    We use encryption, signed URLs, and secure storage to protect your information.
+                    We do not sell your personal information. We may share limited data with:
                   </p>
+                  <ul className="space-y-2 ml-6 list-disc">
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      <strong>Service Providers</strong> assisting with hosting, analytics, and support.
+                    </li>
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      <strong>Legal Authorities</strong> when required to comply with law or protect our rights.
+                    </li>
+                  </ul>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -244,16 +260,42 @@ export default function PrivacyPolicy() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    6. Your Rights
+                    5. Your Rights
                   </h2>
-                  <p className="text-base leading-relaxed"
+                  <p className="text-base leading-relaxed mb-4"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    You may access, update, or delete your information from within the app.
+                    You may:
                   </p>
+                  <ul className="space-y-2 ml-6 list-disc">
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      Access and update your account information at any time.
+                    </li>
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      Cancel your subscription in your Apple ID account settings.
+                    </li>
+                    <li className="text-base leading-relaxed"
+                        style={{ 
+                          color: designTokens.colors.charcoal,
+                          fontFamily: designTokens.typography.body
+                        }}>
+                      Request deletion of your account and related data by contacting us at marketing@fitvueapp.com.
+                    </li>
+                  </ul>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
 
                 <div>
                   <h2 className="text-xl font-semibold mb-4"
@@ -262,16 +304,83 @@ export default function PrivacyPolicy() {
                         color: designTokens.colors.charcoal,
                         letterSpacing: '-0.02em'
                       }}>
-                    7. Contact
+                    6. Children's Privacy
                   </h2>
                   <p className="text-base leading-relaxed"
                      style={{ 
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    For questions, contact us at: <a href="mailto:marketing@fitvueapp.com" className="font-semibold hover:underline">marketing@fitvueapp.com</a>
+                    Fitvue is not intended for children under 13. We do not knowingly collect information from children under 13.
                   </p>
                 </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    7. Third-Party Services
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    Fitvue integrates with third-party services such as Apple and Google for authentication and subscriptions. These providers may collect and process data under their own privacy policies.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    8. Changes to This Policy
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    We may update this Privacy Policy from time to time. Updates will be posted on this page with a new "Last Updated" date.
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
+
+                <div>
+                  <h2 className="text-xl font-semibold mb-4"
+                      style={{ 
+                        fontFamily: designTokens.typography.heading,
+                        color: designTokens.colors.charcoal,
+                        letterSpacing: '-0.02em'
+                      }}>
+                    9. Contact Information
+                  </h2>
+                  <p className="text-base leading-relaxed"
+                     style={{ 
+                       color: designTokens.colors.charcoal,
+                       fontFamily: designTokens.typography.body
+                     }}>
+                    For privacy-related questions, please contact us at:<br />
+                    Email: <a href="mailto:marketing@fitvueapp.com" className="font-semibold hover:underline">marketing@fitvueapp.com</a>
+                  </p>
+                </div>
+
+                <div className="w-full h-px"
+                     style={{ backgroundColor: designTokens.colors.stone }}></div>
               </div>
             </div>
           </CardContent>
