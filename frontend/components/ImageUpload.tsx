@@ -69,9 +69,9 @@ export default function ImageUpload({
         
         if (validateFile(file)) {
           onFileSelect(file);
+          setShowUploadModal(false);
         }
         
-        // Reset input value to allow selecting the same file again
         event.target.value = '';
       }
     },
