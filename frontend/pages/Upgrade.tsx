@@ -43,7 +43,7 @@ export default function Upgrade() {
       icon: <Sparkles className="w-5 h-5" style={{ strokeWidth: 1.5 }} />,
       current: true,
       features: [
-        { text: '5 images included (one-time)', included: true },
+        { text: '3 generations included (one-time)', included: true },
         { text: 'Standard resolution', included: true },
         { text: 'Normal processing speed', included: true },
         { text: 'Preview styling features', included: true }
@@ -52,27 +52,27 @@ export default function Upgrade() {
     {
       id: 'starter',
       name: 'Starter',
-      price: '$6.99',
+      price: '$7.99',
       period: '/month',
       description: 'Perfect for regular styling',
       icon: <Star className="w-5 h-5" style={{ strokeWidth: 1.5 }} />,
-      popular: true,
       features: [
-        { text: '50 images per month', included: true },
+        { text: '30 generations per month', included: true },
         { text: 'HD resolution outputs', included: true },
         { text: 'Faster processing speed', included: true },
-        { text: 'Save up to 20 looks in Collections', included: true }
+        { text: 'Save up to 10 looks in Collections', included: true }
       ]
     },
     {
       id: 'premium',
       name: 'Premium',
-      price: '$11.99',
+      price: '$13.99',
       period: '/month',
       description: 'Enhanced styling experience',
       icon: <Crown className="w-5 h-5" style={{ strokeWidth: 1.5 }} />,
+      popular: true,
       features: [
-        { text: '100 images per month', included: true },
+        { text: '60 generations per month', included: true },
         { text: 'High-resolution outputs', included: true },
         { text: 'Priority processing speed', included: true },
         { text: 'Save up to 50 looks in Collections', included: true },
@@ -82,12 +82,12 @@ export default function Upgrade() {
     {
       id: 'exclusive',
       name: 'Exclusive',
-      price: '$18.99',
+      price: '$24.99',
       period: '/month',
       description: 'Ultimate luxury styling',
       icon: <Crown className="w-5 h-5" style={{ strokeWidth: 1.5, color: '#D4AF37' }} />,
       features: [
-        { text: '200 images per month', included: true },
+        { text: '120 generations per month', included: true },
         { text: 'Ultra HD resolution', included: true },
         { text: 'Fastest priority processing', included: true },
         { text: 'Save up to 100 looks in Collections', included: true },

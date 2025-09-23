@@ -1,9 +1,9 @@
 // Storage limits based on subscription tiers
 export const STORAGE_LIMITS = {
   free: 0,       // No saved images allowed
-  starter: 20,   // Maximum of 20 saved images
-  premium: 40,   // Maximum of 40 saved images
-  exclusive: 80  // Maximum of 80 saved images
+  starter: 10,   // Maximum of 10 saved images
+  premium: 50,   // Maximum of 50 saved images
+  exclusive: 100 // Maximum of 100 saved images
 };
 
 export function getStorageLimit(plan: string): number {
