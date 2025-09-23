@@ -149,63 +149,49 @@ export default function ImageUpload({
     );
   }
 
-  // Show upload options modal first
+  // Show upload button that opens action sheet
   if (showCameraOption && !showOptions && !preview) {
     return (
       <div className={className}>
-        <div
-          className="cursor-pointer transition-all duration-300 hover:scale-[1.01]"
-          style={{
-            border: `2px solid ${designTokens.colors.stone}`,
-            borderRadius: designTokens.radius.xl,
-            backgroundColor: designTokens.colors.ivory,
-            padding: '3rem 2rem'
-          }}
+        <Button
           onClick={() => setShowOptions(true)}
+          className="w-full py-6 text-base font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          style={{
+            background: `linear-gradient(135deg, ${designTokens.colors.charcoal} 0%, #1a1a1a 100%)`,
+            color: designTokens.colors.pure,
+            borderRadius: designTokens.radius.xl,
+            boxShadow: designTokens.shadows.lg
+          }}
+          size="lg"
         >
-          <div className="text-center space-y-6">
-            <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
-                 style={{ 
-                   background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)` 
-                 }}>
-              <ImageIcon className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
-            </div>
-            
-            <div className="space-y-2">
-              <p className="text-xl font-semibold"
-                 style={{ 
-                   fontFamily: designTokens.typography.heading,
-                   color: designTokens.colors.charcoal 
-                 }}>
-                Add an image
-              </p>
-              <p className="text-base leading-relaxed"
-                 style={{ color: designTokens.colors.slate }}>
-                Choose how to add your photo
-              </p>
-            </div>
-          </div>
-        </div>
+          <Upload className="w-5 h-5 mr-3" />
+          Upload Image
+        </Button>
       </div>
     );
   }
 
-  // Show camera/upload options
+  // Show native-style action sheet
   if (showOptions && !preview) {
     return (
       <div className={className}>
-        <div className="space-y-4">
-          <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold mb-2"
-                style={{ 
-                  color: designTokens.colors.charcoal,
-                  fontFamily: designTokens.typography.heading 
-                }}>
-              Choose upload method
-            </h3>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-4">
+        {/* Action Sheet Overlay */}
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end"
+          onClick={() => setShowOptions(false)}
+        >
+          <div 
+            className="w-full bg-white rounded-t-3xl p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: designTokens.colors.pure,
+              borderRadius: `${designTokens.radius['2xl']} ${designTokens.radius['2xl']} 0 0`,
+              boxShadow: `0 -10px 25px -5px ${designTokens.colors.charcoal}20`
+            }}
+          >
+            {/* Handle Bar */}
+            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+            
             {/* Camera Option */}
             <Button
               onClick={async () => {
@@ -214,67 +200,63 @@ export default function ImageUpload({
                   handleCameraCapture();
                 }
               }}
-              className="flex items-center justify-center space-x-3 p-6 h-auto"
+              className="w-full flex items-center justify-center space-x-3 py-4 text-lg font-medium"
               variant="outline"
               style={{
                 border: `2px solid ${designTokens.colors.stone}`,
                 borderRadius: designTokens.radius.xl,
-                backgroundColor: designTokens.colors.ivory
+                backgroundColor: designTokens.colors.ivory,
+                color: designTokens.colors.charcoal
               }}
             >
-              <Camera className="w-6 h-6" style={{ color: designTokens.colors.charcoal }} />
-              <span className="text-lg font-medium" style={{ color: designTokens.colors.charcoal }}>
-                Take Photo
-              </span>
+              <Camera className="w-6 h-6" />
+              <span>Take Photo</span>
             </Button>
             
             {/* Upload Option */}
             <Button
               onClick={handleFileUpload}
-              className="flex items-center justify-center space-x-3 p-6 h-auto"
+              className="w-full flex items-center justify-center space-x-3 py-4 text-lg font-medium"
               variant="outline"
               style={{
                 border: `2px solid ${designTokens.colors.stone}`,
                 borderRadius: designTokens.radius.xl,
-                backgroundColor: designTokens.colors.ivory
+                backgroundColor: designTokens.colors.ivory,
+                color: designTokens.colors.charcoal
               }}
             >
-              <Upload className="w-6 h-6" style={{ color: designTokens.colors.charcoal }} />
-              <span className="text-lg font-medium" style={{ color: designTokens.colors.charcoal }}>
-                Upload from Device
-              </span>
+              <Upload className="w-6 h-6" />
+              <span>Upload from Device</span>
+            </Button>
+            
+            {/* Camera Error Message */}
+            {cameraError && (
+              <div className="p-4"
+                   style={{ 
+                     backgroundColor: `${designTokens.colors.error}15`,
+                     border: `1px solid ${designTokens.colors.error}`,
+                     borderRadius: designTokens.radius.lg
+                   }}>
+                <p className="text-sm text-center"
+                   style={{ color: designTokens.colors.charcoal }}>
+                  {cameraError}
+                </p>
+              </div>
+            )}
+            
+            {/* Cancel Button */}
+            <Button
+              onClick={() => setShowOptions(false)}
+              variant="ghost"
+              className="w-full py-4 text-lg font-medium"
+              style={{ 
+                color: designTokens.colors.slate,
+                backgroundColor: 'transparent'
+              }}
+            >
+              Cancel
             </Button>
           </div>
-          
-          {/* Camera Error Message */}
-          {cameraError && (
-            <div className="mt-4 p-4"
-                 style={{ 
-                   backgroundColor: `${designTokens.colors.error}15`,
-                   border: `1px solid ${designTokens.colors.error}`,
-                   borderRadius: designTokens.radius.lg
-                 }}>
-              <p className="text-sm text-center"
-                 style={{ color: designTokens.colors.charcoal }}>
-                {cameraError}
-              </p>
-            </div>
-          )}
-          
-          <div className="text-center space-y-1 mt-4"
-               style={{ color: designTokens.colors.ash }}>
-            <p className="text-sm">Supported formats: JPEG, PNG, WebP</p>
-            <p className="text-sm">Maximum size: {formatFileSize(maxSize)}</p>
-          </div>
-          
-          <Button
-            onClick={() => setShowOptions(false)}
-            variant="ghost"
-            className="w-full mt-4"
-            style={{ color: designTokens.colors.slate }}
-          >
-            Back
-          </Button>
         </div>
         
         {/* Hidden file inputs */}
