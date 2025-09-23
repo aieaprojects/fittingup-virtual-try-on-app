@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Upload, X, Image as ImageIcon, Camera } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SUPPORTED_FORMATS, MAX_FILE_SIZE } from '../config';
+import { useToast } from '@/components/ui/use-toast';
+import { MAX_FILE_SIZE, SUPPORTED_FORMATS } from '../config';
 import { designTokens } from '../styles/design-tokens';
 
 interface ImageUploadProps {
@@ -12,45 +12,18 @@ interface ImageUploadProps {
   className?: string;
   preview?: string;
   onClearPreview?: () => void;
-  showCameraOption?: boolean;
 }
 
 export default function ImageUpload({
   onFileSelect,
-  accept,
+  accept = 'image/*',
   maxSize = MAX_FILE_SIZE,
   className = '',
   preview,
   onClearPreview,
-  showCameraOption = true,
 }: ImageUploadProps) {
-  const [dragActive, setDragActive] = useState(false);
-  const [showOptions, setShowOptions] = useState(false);
-  const [cameraError, setCameraError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        onFileSelect(acceptedFiles[0]);
-      }
-    },
-    [onFileSelect]
-  );
-
-  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
-    onDrop,
-    accept: accept ? { [accept]: [] } : {
-      'image/jpeg': ['.jpg', '.jpeg'],
-      'image/png': ['.png'],
-      'image/webp': ['.webp'],
-    },
-    maxSize,
-    multiple: false,
-    onDragEnter: () => setDragActive(true),
-    onDragLeave: () => setDragActive(false),
-  });
+  const { toast } = useToast();
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -60,56 +33,55 @@ export default function ImageUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const handleCameraCapture = useCallback(() => {
-    setCameraError('');
-    if (cameraInputRef.current) {
-      cameraInputRef.current.click();
+  const validateFile = (file: File): boolean => {
+    // Check file size
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: `File size must be less than ${formatFileSize(maxSize)}`,
+        variant: "destructive",
+      });
+      return false;
     }
-  }, []);
 
-  const handleFileUpload = useCallback(() => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    // Check file type
+    const supportedTypes = SUPPORTED_FORMATS;
+    if (!supportedTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a JPEG, PNG, or WebP image",
+        variant: "destructive",
+      });
+      return false;
     }
-  }, []);
 
-  const handleCameraChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (files && files.length > 0) {
-        onFileSelect(files[0]);
-        setShowOptions(false);
-      }
-    },
-    [onFileSelect]
-  );
+    return true;
+  };
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (files && files.length > 0) {
-        onFileSelect(files[0]);
-        setShowOptions(false);
+        const file = files[0];
+        
+        if (validateFile(file)) {
+          onFileSelect(file);
+        }
+        
+        // Reset input value to allow selecting the same file again
+        event.target.value = '';
       }
     },
-    [onFileSelect]
+    [onFileSelect, maxSize, toast]
   );
 
-  // Check if camera access is available
-  const checkCameraPermission = async () => {
-    try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('Camera not supported');
-      }
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      stream.getTracks().forEach(track => track.stop());
-      return true;
-    } catch (error) {
-      setCameraError('Camera access blocked. Please allow it in settings or upload from your device.');
-      return false;
+  const handleButtonClick = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
-  };
+  }, []);
 
+  // Show preview if image is selected
   if (preview) {
     return (
       <div className={`relative ${className}`}>
@@ -149,12 +121,13 @@ export default function ImageUpload({
     );
   }
 
-  // Show upload button that opens action sheet
-  if (showCameraOption && !showOptions && !preview) {
-    return (
-      <div className={className}>
+  // Show upload button
+  return (
+    <div className={className}>
+      <div className="space-y-6">
+        {/* Single upload button */}
         <Button
-          onClick={() => setShowOptions(true)}
+          onClick={handleButtonClick}
           className="w-full py-6 text-base font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           style={{
             background: `linear-gradient(135deg, ${designTokens.colors.charcoal} 0%, #1a1a1a 100%)`,
@@ -165,201 +138,25 @@ export default function ImageUpload({
           size="lg"
         >
           <Upload className="w-5 h-5 mr-3" />
-          Upload Image
+          Upload Photo
         </Button>
-      </div>
-    );
-  }
 
-  // Show native-style action sheet
-  if (showOptions && !preview) {
-    return (
-      <div className={className}>
-        {/* Action Sheet Overlay */}
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end"
-          onClick={() => setShowOptions(false)}
-        >
-          <div 
-            className="w-full bg-white rounded-t-3xl p-6 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: designTokens.colors.pure,
-              borderRadius: `${designTokens.radius['2xl']} ${designTokens.radius['2xl']} 0 0`,
-              boxShadow: `0 -10px 25px -5px ${designTokens.colors.charcoal}20`
-            }}
-          >
-            {/* Handle Bar */}
-            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
-            
-            {/* Camera Option */}
-            <Button
-              onClick={async () => {
-                const hasPermission = await checkCameraPermission();
-                if (hasPermission) {
-                  handleCameraCapture();
-                }
-              }}
-              className="w-full flex items-center justify-center space-x-3 py-4 text-lg font-medium"
-              variant="outline"
-              style={{
-                border: `2px solid ${designTokens.colors.stone}`,
-                borderRadius: designTokens.radius.xl,
-                backgroundColor: designTokens.colors.ivory,
-                color: designTokens.colors.charcoal
-              }}
-            >
-              <Camera className="w-6 h-6" />
-              <span>Take Photo</span>
-            </Button>
-            
-            {/* Upload Option */}
-            <Button
-              onClick={handleFileUpload}
-              className="w-full flex items-center justify-center space-x-3 py-4 text-lg font-medium"
-              variant="outline"
-              style={{
-                border: `2px solid ${designTokens.colors.stone}`,
-                borderRadius: designTokens.radius.xl,
-                backgroundColor: designTokens.colors.ivory,
-                color: designTokens.colors.charcoal
-              }}
-            >
-              <Upload className="w-6 h-6" />
-              <span>Upload from Device</span>
-            </Button>
-            
-            {/* Camera Error Message */}
-            {cameraError && (
-              <div className="p-4"
-                   style={{ 
-                     backgroundColor: `${designTokens.colors.error}15`,
-                     border: `1px solid ${designTokens.colors.error}`,
-                     borderRadius: designTokens.radius.lg
-                   }}>
-                <p className="text-sm text-center"
-                   style={{ color: designTokens.colors.charcoal }}>
-                  {cameraError}
-                </p>
-              </div>
-            )}
-            
-            {/* Cancel Button */}
-            <Button
-              onClick={() => setShowOptions(false)}
-              variant="ghost"
-              className="w-full py-4 text-lg font-medium"
-              style={{ 
-                color: designTokens.colors.slate,
-                backgroundColor: 'transparent'
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-        
-        {/* Hidden file inputs */}
-        <input
-          ref={cameraInputRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={handleCameraChange}
-          style={{ display: 'none' }}
-        />
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={accept || 'image/jpeg,image/png,image/webp'}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className={className}>
-      <div
-        {...getRootProps()}
-        className="cursor-pointer transition-all duration-300 hover:scale-[1.01]"
-        style={{
-          border: `2px dashed ${isDragActive || dragActive ? designTokens.colors.sage : designTokens.colors.stone}`,
-          borderRadius: designTokens.radius.xl,
-          backgroundColor: isDragActive || dragActive 
-            ? `${designTokens.colors.sage}10` 
-            : designTokens.colors.ivory,
-          padding: '3rem 2rem',
-          boxShadow: isDragActive || dragActive ? designTokens.shadows.md : 'none'
-        }}
-      >
-        <input {...getInputProps()} />
-        
-        <div className="text-center space-y-6">
-          <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
-               style={{ 
-                 background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)` 
-               }}>
-            {isDragActive ? (
-              <Upload className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
-            ) : (
-              <Camera className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
-            )}
-          </div>
-          
-          <div className="space-y-2">
-            <p className="text-xl font-semibold"
-               style={{ 
-                 fontFamily: designTokens.typography.heading,
-                 color: designTokens.colors.charcoal 
-               }}>
-              {isDragActive ? 'Drop image here' : 'Upload an image'}
-            </p>
-            <p className="text-base leading-relaxed"
-               style={{ color: designTokens.colors.slate }}>
-              Drag & drop or click to select
-            </p>
-          </div>
-          
-          <div className="space-y-1"
-               style={{ color: designTokens.colors.ash }}>
-            <p className="text-sm">Supported formats: JPEG, PNG, WebP</p>
-            <p className="text-sm">Maximum size: {formatFileSize(maxSize)}</p>
-          </div>
-        </div>
+        {/* Hint text */}
+        <p className="text-center text-sm"
+           style={{ color: designTokens.colors.ash }}>
+          JPEG/PNG/WebP • Max {formatFileSize(maxSize)}
+        </p>
       </div>
 
-      {fileRejections.length > 0 && (
-        <div className="mt-6 p-4"
-             style={{ 
-               backgroundColor: `${designTokens.colors.error}15`,
-               border: `1px solid ${designTokens.colors.error}`,
-               borderRadius: designTokens.radius.lg
-             }}>
-          <p className="text-sm font-semibold mb-2"
-             style={{ color: designTokens.colors.charcoal }}>
-            Upload Error:
-          </p>
-          {fileRejections.map(({ file, errors }) => (
-            <div key={file.name} className="mt-2">
-              <p className="text-sm font-medium"
-                 style={{ color: designTokens.colors.charcoal }}>
-                {file.name}:
-              </p>
-              <ul className="mt-1 ml-4 space-y-1">
-                {errors.map((error) => (
-                  <li key={error.code} 
-                      className="text-sm"
-                      style={{ color: designTokens.colors.slate }}>
-                    • {error.message}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Hidden file input with native iOS chooser support */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        capture="environment"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
     </div>
   );
 }
