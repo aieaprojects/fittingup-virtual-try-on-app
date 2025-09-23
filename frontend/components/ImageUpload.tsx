@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, X, Image as ImageIcon, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ interface ImageUploadProps {
   className?: string;
   preview?: string;
   onClearPreview?: () => void;
+  showCameraOption?: boolean;
 }
 
 export default function ImageUpload({
@@ -21,8 +22,13 @@ export default function ImageUpload({
   className = '',
   preview,
   onClearPreview,
+  showCameraOption = true,
 }: ImageUploadProps) {
   const [dragActive, setDragActive] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [cameraError, setCameraError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -52,6 +58,56 @@ export default function ImageUpload({
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const handleCameraCapture = useCallback(() => {
+    setCameraError('');
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  }, []);
+
+  const handleFileUpload = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }, []);
+
+  const handleCameraChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        onFileSelect(files[0]);
+        setShowOptions(false);
+      }
+    },
+    [onFileSelect]
+  );
+
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        onFileSelect(files[0]);
+        setShowOptions(false);
+      }
+    },
+    [onFileSelect]
+  );
+
+  // Check if camera access is available
+  const checkCameraPermission = async () => {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach(track => track.stop());
+      return true;
+    } catch (error) {
+      setCameraError('Camera access blocked. Please allow it in settings or upload from your device.');
+      return false;
+    }
   };
 
   if (preview) {
@@ -89,6 +145,154 @@ export default function ImageUpload({
             </Button>
           )}
         </div>
+      </div>
+    );
+  }
+
+  // Show upload options modal first
+  if (showCameraOption && !showOptions && !preview) {
+    return (
+      <div className={className}>
+        <div
+          className="cursor-pointer transition-all duration-300 hover:scale-[1.01]"
+          style={{
+            border: `2px solid ${designTokens.colors.stone}`,
+            borderRadius: designTokens.radius.xl,
+            backgroundColor: designTokens.colors.ivory,
+            padding: '3rem 2rem'
+          }}
+          onClick={() => setShowOptions(true)}
+        >
+          <div className="text-center space-y-6">
+            <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
+                 style={{ 
+                   background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)` 
+                 }}>
+              <ImageIcon className="w-8 h-8" style={{ color: designTokens.colors.charcoal }} />
+            </div>
+            
+            <div className="space-y-2">
+              <p className="text-xl font-semibold"
+                 style={{ 
+                   fontFamily: designTokens.typography.heading,
+                   color: designTokens.colors.charcoal 
+                 }}>
+                Add an image
+              </p>
+              <p className="text-base leading-relaxed"
+                 style={{ color: designTokens.colors.slate }}>
+                Choose how to add your photo
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show camera/upload options
+  if (showOptions && !preview) {
+    return (
+      <div className={className}>
+        <div className="space-y-4">
+          <div className="text-center mb-6">
+            <h3 className="text-lg font-semibold mb-2"
+                style={{ 
+                  color: designTokens.colors.charcoal,
+                  fontFamily: designTokens.typography.heading 
+                }}>
+              Choose upload method
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4">
+            {/* Camera Option */}
+            <Button
+              onClick={async () => {
+                const hasPermission = await checkCameraPermission();
+                if (hasPermission) {
+                  handleCameraCapture();
+                }
+              }}
+              className="flex items-center justify-center space-x-3 p-6 h-auto"
+              variant="outline"
+              style={{
+                border: `2px solid ${designTokens.colors.stone}`,
+                borderRadius: designTokens.radius.xl,
+                backgroundColor: designTokens.colors.ivory
+              }}
+            >
+              <Camera className="w-6 h-6" style={{ color: designTokens.colors.charcoal }} />
+              <span className="text-lg font-medium" style={{ color: designTokens.colors.charcoal }}>
+                Take Photo
+              </span>
+            </Button>
+            
+            {/* Upload Option */}
+            <Button
+              onClick={handleFileUpload}
+              className="flex items-center justify-center space-x-3 p-6 h-auto"
+              variant="outline"
+              style={{
+                border: `2px solid ${designTokens.colors.stone}`,
+                borderRadius: designTokens.radius.xl,
+                backgroundColor: designTokens.colors.ivory
+              }}
+            >
+              <Upload className="w-6 h-6" style={{ color: designTokens.colors.charcoal }} />
+              <span className="text-lg font-medium" style={{ color: designTokens.colors.charcoal }}>
+                Upload from Device
+              </span>
+            </Button>
+          </div>
+          
+          {/* Camera Error Message */}
+          {cameraError && (
+            <div className="mt-4 p-4"
+                 style={{ 
+                   backgroundColor: `${designTokens.colors.error}15`,
+                   border: `1px solid ${designTokens.colors.error}`,
+                   borderRadius: designTokens.radius.lg
+                 }}>
+              <p className="text-sm text-center"
+                 style={{ color: designTokens.colors.charcoal }}>
+                {cameraError}
+              </p>
+            </div>
+          )}
+          
+          <div className="text-center space-y-1 mt-4"
+               style={{ color: designTokens.colors.ash }}>
+            <p className="text-sm">Supported formats: JPEG, PNG, WebP</p>
+            <p className="text-sm">Maximum size: {formatFileSize(maxSize)}</p>
+          </div>
+          
+          <Button
+            onClick={() => setShowOptions(false)}
+            variant="ghost"
+            className="w-full mt-4"
+            style={{ color: designTokens.colors.slate }}
+          >
+            Back
+          </Button>
+        </div>
+        
+        {/* Hidden file inputs */}
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleCameraChange}
+          style={{ display: 'none' }}
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={accept || 'image/jpeg,image/png,image/webp'}
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
       </div>
     );
   }

@@ -1,12 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { SignIn } from '@clerk/clerk-react';
 import { Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import backend from '~backend/client';
 import { designTokens, styleHelpers } from '../styles/design-tokens';
 
 export default function Auth() {
   const navigate = useNavigate();
+  const { user, isSignedIn } = useUser();
   const [logoError, setLogoError] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  const [isProcessingConsent, setIsProcessingConsent] = useState(false);
+
+  // Check if user needs to give consent after signing in
+  useEffect(() => {
+    if (isSignedIn && user) {
+      // Show consent modal for new users
+      setShowConsentModal(true);
+    }
+  }, [isSignedIn, user]);
+
+  const handleConsentSubmit = async () => {
+    if (!consentGiven) return;
+    
+    setIsProcessingConsent(true);
+    try {
+      await backend.credits.ensureUserWithConsentAPI({
+        terms_accepted: true,
+        privacy_accepted: true
+      });
+      setShowConsentModal(false);
+    } catch (error) {
+      console.error('Failed to save consent:', error);
+    } finally {
+      setIsProcessingConsent(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4"
@@ -91,8 +124,10 @@ export default function Auth() {
           <p className="text-xs leading-relaxed"
              style={{ color: designTokens.colors.ash }}>
             By signing up, you agree to our{' '}
-            <button
-              onClick={() => navigate('/terms-of-service')}
+            <a
+              href="https://fitvueapp.com/terms"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium underline transition-colors duration-200"
               style={{ color: designTokens.colors.slate }}
               onMouseEnter={(e) => {
@@ -103,10 +138,12 @@ export default function Auth() {
               }}
             >
               Terms of Service
-            </button>{' '}
+            </a>{' '}
             and{' '}
-            <button
-              onClick={() => navigate('/privacy-policy')}
+            <a
+              href="https://fitvueapp.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium underline transition-colors duration-200"
               style={{ color: designTokens.colors.slate }}
               onMouseEnter={(e) => {
@@ -117,10 +154,82 @@ export default function Auth() {
               }}
             >
               Privacy Policy
-            </button>
+            </a>
           </p>
         </div>
       </div>
+
+      {/* Consent Modal */}
+      {showConsentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4"
+               style={{
+                 backgroundColor: designTokens.colors.pure,
+                 borderRadius: designTokens.radius['2xl'],
+                 boxShadow: designTokens.shadows.xl
+               }}>
+            <div className="text-center space-y-4">
+              <h2 className="text-xl font-semibold"
+                  style={{ 
+                    color: designTokens.colors.charcoal,
+                    fontFamily: designTokens.typography.heading 
+                  }}>
+                Welcome to Fitvue!
+              </h2>
+              
+              <p className="text-sm leading-relaxed"
+                 style={{ color: designTokens.colors.slate }}>
+                To continue, please confirm that you agree to our terms and privacy policy.
+              </p>
+              
+              <div className="flex items-start space-x-3 text-left">
+                <Checkbox
+                  id="consent"
+                  checked={consentGiven}
+                  onCheckedChange={(checked) => setConsentGiven(checked === true)}
+                  className="mt-1"
+                />
+                <label htmlFor="consent" className="text-sm leading-relaxed cursor-pointer"
+                       style={{ color: designTokens.colors.charcoal }}>
+                  I agree to the{' '}
+                  <a
+                    href="https://fitvueapp.com/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium underline"
+                    style={{ color: designTokens.colors.slate }}
+                  >
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    href="https://fitvueapp.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium underline"
+                    style={{ color: designTokens.colors.slate }}
+                  >
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+              
+              <Button
+                onClick={handleConsentSubmit}
+                disabled={!consentGiven || isProcessingConsent}
+                className="w-full mt-6"
+                style={{
+                  backgroundColor: consentGiven ? designTokens.colors.charcoal : designTokens.colors.stone,
+                  color: designTokens.colors.pure,
+                  borderRadius: designTokens.radius.lg
+                }}
+              >
+                {isProcessingConsent ? 'Processing...' : 'Continue'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,9 @@
 export interface User {
   id: string;
   email: string;
+  terms_accepted: boolean;
+  privacy_accepted: boolean;
+  consent_date?: Date;
   created_at: Date;
   updated_at: Date;
 }

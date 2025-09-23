@@ -310,7 +310,9 @@ export namespace avatar {
 import {
     checkCredits as api_credits_credits_checkCredits,
     deductCredit as api_credits_credits_deductCredit,
+    ensureUserWithConsentAPI as api_credits_credits_ensureUserWithConsentAPI,
     getCredits as api_credits_credits_getCredits,
+    saveConsent as api_credits_credits_saveConsent,
     updatePlan as api_credits_credits_updatePlan
 } from "~backend/credits/credits";
 import { testScenario as api_credits_test_testScenario } from "~backend/credits/test";
@@ -324,7 +326,9 @@ export namespace credits {
             this.baseClient = baseClient
             this.checkCredits = this.checkCredits.bind(this)
             this.deductCredit = this.deductCredit.bind(this)
+            this.ensureUserWithConsentAPI = this.ensureUserWithConsentAPI.bind(this)
             this.getCredits = this.getCredits.bind(this)
+            this.saveConsent = this.saveConsent.bind(this)
             this.testScenario = this.testScenario.bind(this)
             this.updatePlan = this.updatePlan.bind(this)
         }
@@ -347,6 +351,12 @@ export namespace credits {
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_credits_credits_deductCredit>
         }
 
+        public async ensureUserWithConsentAPI(params: RequestType<typeof api_credits_credits_ensureUserWithConsentAPI>): Promise<ResponseType<typeof api_credits_credits_ensureUserWithConsentAPI>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/credits/ensure-user`, {method: "POST", body: JSON.stringify(params)})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_credits_credits_ensureUserWithConsentAPI>
+        }
+
         /**
          * Get user's current credit status
          */
@@ -354,6 +364,12 @@ export namespace credits {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/credits`, {method: "GET", body: undefined})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_credits_credits_getCredits>
+        }
+
+        public async saveConsent(params: RequestType<typeof api_credits_credits_saveConsent>): Promise<ResponseType<typeof api_credits_credits_saveConsent>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/credits/consent`, {method: "POST", body: JSON.stringify(params)})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_credits_credits_saveConsent>
         }
 
         /**

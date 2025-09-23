@@ -1,7 +1,7 @@
 import { api } from "encore.dev/api";
 import { getAuthData } from "~encore/auth";
 import { db } from "../shared/db";
-import { ensureUser } from "../shared/utils";
+import { ensureUser, ensureUserWithConsent } from "../shared/utils";
 
 export interface CreditInfo {
   plan: string;
@@ -179,6 +179,57 @@ export const updatePlan = api(
     }
 
     return await getCredits();
+  }
+);
+
+// Save user consent
+export interface SaveConsentRequest {
+  terms_accepted: boolean;
+  privacy_accepted: boolean;
+}
+
+export const saveConsent = api(
+  { method: "POST", path: "/credits/consent", auth: true, expose: true },
+  async (req: SaveConsentRequest): Promise<{ success: boolean }> => {
+    const auth = getAuthData()!;
+    const userID = auth.userID;
+    
+    // Update user consent in the database
+    await db.exec`
+      UPDATE users 
+      SET 
+        terms_accepted = ${req.terms_accepted},
+        privacy_accepted = ${req.privacy_accepted},
+        consent_date = ${new Date()},
+        updated_at = NOW()
+      WHERE id = ${userID}
+    `;
+
+    return { success: true };
+  }
+);
+
+// Ensure user exists with consent
+export interface EnsureUserRequest {
+  terms_accepted?: boolean;
+  privacy_accepted?: boolean;
+}
+
+export const ensureUserWithConsentAPI = api(
+  { method: "POST", path: "/credits/ensure-user", auth: true, expose: true },
+  async (req: EnsureUserRequest): Promise<{ success: boolean }> => {
+    const auth = getAuthData()!;
+    const { userID, email } = auth;
+    
+    // Create/update user with consent info
+    await ensureUserWithConsent(
+      userID, 
+      email || '', 
+      req.terms_accepted || false, 
+      req.privacy_accepted || false
+    );
+
+    return { success: true };
   }
 );
 

@@ -3,10 +3,30 @@ import { db } from "./db";
 
 export async function ensureUser(userID: string, email: string): Promise<void> {
   await db.exec`
-    INSERT INTO users (id, email) 
-    VALUES (${userID}, ${email}) 
+    INSERT INTO users (id, email, terms_accepted, privacy_accepted) 
+    VALUES (${userID}, ${email}, false, false) 
     ON CONFLICT (id) DO UPDATE SET 
       email = EXCLUDED.email,
+      updated_at = NOW()
+  `;
+}
+
+export async function ensureUserWithConsent(
+  userID: string, 
+  email: string, 
+  termsAccepted: boolean = false, 
+  privacyAccepted: boolean = false
+): Promise<void> {
+  const consentDate = termsAccepted && privacyAccepted ? new Date() : null;
+  
+  await db.exec`
+    INSERT INTO users (id, email, terms_accepted, privacy_accepted, consent_date) 
+    VALUES (${userID}, ${email}, ${termsAccepted}, ${privacyAccepted}, ${consentDate}) 
+    ON CONFLICT (id) DO UPDATE SET 
+      email = EXCLUDED.email,
+      terms_accepted = EXCLUDED.terms_accepted,
+      privacy_accepted = EXCLUDED.privacy_accepted,
+      consent_date = EXCLUDED.consent_date,
       updated_at = NOW()
   `;
 }
