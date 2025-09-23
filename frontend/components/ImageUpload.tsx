@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Camera, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { MAX_FILE_SIZE, SUPPORTED_FORMATS } from '../config';
 import { designTokens } from '../styles/design-tokens';
@@ -23,6 +24,8 @@ export default function ImageUpload({
   onClearPreview,
 }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const { toast } = useToast();
 
   const formatFileSize = (bytes: number) => {
@@ -76,6 +79,18 @@ export default function ImageUpload({
   );
 
   const handleButtonClick = useCallback(() => {
+    setShowUploadModal(true);
+  }, []);
+
+  const handleTakePhoto = useCallback(() => {
+    setShowUploadModal(false);
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  }, []);
+
+  const handleChooseFromLibrary = useCallback(() => {
+    setShowUploadModal(false);
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -148,15 +163,75 @@ export default function ImageUpload({
         </p>
       </div>
 
-      {/* Hidden file input with native iOS chooser support */}
+      {/* Hidden file inputs */}
       <input
         ref={fileInputRef}
+        type="file"
+        accept={accept}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+      <input
+        ref={cameraInputRef}
         type="file"
         accept={accept}
         capture="environment"
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
+
+      {/* Upload Option Modal */}
+      <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
+        <DialogContent className="max-w-sm mx-auto"
+                      style={{
+                        background: designTokens.colors.pure,
+                        border: `1px solid ${designTokens.colors.stone}`,
+                        borderRadius: designTokens.radius['2xl'],
+                        boxShadow: designTokens.shadows.xl
+                      }}>
+          <DialogHeader className="text-center pb-2">
+            <DialogTitle className="text-xl font-semibold"
+                        style={{
+                          fontFamily: designTokens.typography.heading,
+                          color: designTokens.colors.charcoal
+                        }}>
+              Upload Photo
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 pt-4">
+            <Button
+              onClick={handleTakePhoto}
+              className="w-full py-6 text-base font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              variant="outline"
+              style={{
+                border: `2px solid ${designTokens.colors.stone}`,
+                borderRadius: designTokens.radius.xl,
+                color: designTokens.colors.charcoal,
+                backgroundColor: designTokens.colors.pure
+              }}
+            >
+              <Camera className="w-5 h-5 mr-3" />
+              Take a Photo
+            </Button>
+            
+            <Button
+              onClick={handleChooseFromLibrary}
+              className="w-full py-6 text-base font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              variant="outline"
+              style={{
+                border: `2px solid ${designTokens.colors.stone}`,
+                borderRadius: designTokens.radius.xl,
+                color: designTokens.colors.charcoal,
+                backgroundColor: designTokens.colors.pure
+              }}
+            >
+              <ImageIcon className="w-5 h-5 mr-3" />
+              Choose from Library
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
