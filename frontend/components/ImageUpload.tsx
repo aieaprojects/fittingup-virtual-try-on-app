@@ -99,16 +99,17 @@ export default function ImageUpload({
   // Show preview if image is selected
   if (preview) {
     return (
-      <div className={`relative ${className}`}>
+      <div className={`relative ${className}`} aria-live="polite">
         <div className="relative group">
           <img
             src={preview}
-            alt="Preview"
-            className="w-full h-72 object-cover transition-all duration-300"
+            alt="Garment preview"
+            className="w-full h-72 object-contain transition-all duration-300"
             style={{ 
               borderRadius: designTokens.radius.xl,
               border: `2px solid ${designTokens.colors.stone}`,
-              boxShadow: designTokens.shadows.md
+              boxShadow: designTokens.shadows.md,
+              backgroundColor: designTokens.colors.pearl
             }}
           />
           

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Shield } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { designTokens, styleHelpers } from '../styles/design-tokens';
 
 export default function PrivacyPolicy() {
@@ -33,32 +33,22 @@ export default function PrivacyPolicy() {
         </div>
 
         {/* Title Section */}
-        <div className="text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
-               style={{ 
-                 background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)`,
-                 border: `1px solid ${designTokens.colors.stone}`
-               }}>
-            <Shield className="w-8 h-8" style={{ color: designTokens.colors.charcoal, strokeWidth: 1.5 }} />
-          </div>
-          
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight"
-                style={{ 
-                  fontFamily: designTokens.typography.heading,
-                  color: designTokens.colors.charcoal,
-                  letterSpacing: '-0.02em'
-                }}>
-              Privacy Policy
-            </h1>
-            <p className="text-base leading-relaxed"
-               style={{ 
-                 color: designTokens.colors.slate,
-                 fontFamily: designTokens.typography.body
-               }}>
-              How we protect and handle your information
-            </p>
-          </div>
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight"
+              style={{ 
+                fontFamily: designTokens.typography.heading,
+                color: designTokens.colors.charcoal,
+                letterSpacing: '-0.02em'
+              }}>
+            Privacy Policy
+          </h1>
+          <p className="text-base leading-relaxed"
+             style={{ 
+               color: designTokens.colors.slate,
+               fontFamily: designTokens.typography.body
+             }}>
+            How we protect and handle your information
+          </p>
         </div>
 
         {/* Content */}
@@ -279,7 +269,7 @@ export default function PrivacyPolicy() {
                        color: designTokens.colors.charcoal,
                        fontFamily: designTokens.typography.body
                      }}>
-                    If you have questions, contact us at: <strong>info@clozet.com</strong>
+                    For questions, contact us at: <a href="mailto:marketing@fitvueapp.com" className="font-semibold hover:underline">marketing@fitvueapp.com</a>
                   </p>
                 </div>
               </div>
