@@ -34,19 +34,6 @@ export default function PrivacyPolicy() {
 
         {/* Title Section */}
         <div className="text-center space-y-6">
-          <div className="flex justify-center mb-4">
-            <img
-              src="/clozet-logo.svg"
-              alt="Clozet"
-              className="h-12 transition-opacity duration-300 hover:opacity-80"
-              style={{
-                filter: 'none',
-                maxWidth: '250px',
-                width: 'auto'
-              }}
-            />
-          </div>
-          
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
                style={{ 
                  background: `linear-gradient(135deg, ${designTokens.colors.sage}20 0%, ${designTokens.colors.blush}20 100%)`,
