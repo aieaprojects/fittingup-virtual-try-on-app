@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
                color: designTokens.colors.slate,
                fontFamily: designTokens.typography.body
              }}>
-            Last Updated: [Insert Date]
+            Last Updated: October 3, 2025
           </p>
         </div>
 
