@@ -36,6 +36,22 @@ export default function Upgrade() {
 
   const plans: Plan[] = [
     {
+      id: 'free',
+      name: 'Free Trial',
+      price: 'Free',
+      period: '',
+      images: 3,
+      description: 'Try before you buy',
+      icon: <Star className="w-5 h-5" style={{ strokeWidth: 1.5 }} />,
+      current: true,
+      features: [
+        { text: '3 image generations total', included: true },
+        { text: 'Standard resolution', included: true },
+        { text: 'Normal processing speed', included: true },
+        { text: 'Preview all features', included: true }
+      ]
+    },
+    {
       id: 'starter',
       name: 'Starter',
       price: '$7.99',
@@ -246,7 +262,7 @@ export default function Upgrade() {
                            color: designTokens.colors.slate,
                            fontFamily: designTokens.typography.body 
                          }}>
-                        {plan.images} images per month
+                        {plan.id === 'free' ? `${plan.images} images total` : `${plan.images} images per month`}
                       </p>
                     </div>
                   </div>
@@ -296,43 +312,53 @@ export default function Upgrade() {
                   ))}
                 </div>
 
-                <Button
-                  onClick={() => handlePurchase(plan.id)}
-                  disabled={purchasingPlan === plan.id}
-                  className="w-full py-4 text-sm font-medium tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100"
-                  style={{
-                    background: purchasingPlan === plan.id 
-                      ? designTokens.colors.ash
-                      : plan.id === 'exclusive'
-                        ? `linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)`
-                        : `linear-gradient(135deg, ${designTokens.colors.charcoal} 0%, #1a1a1a 100%)`,
-                    color: designTokens.colors.pure,
-                    borderRadius: designTokens.radius.lg,
-                    boxShadow: purchasingPlan === plan.id 
-                      ? 'none' 
-                      : plan.id === 'exclusive'
-                        ? '0 8px 24px rgba(212, 175, 55, 0.4)'
-                        : designTokens.shadows.lg,
-                    fontFamily: designTokens.typography.body,
-                    letterSpacing: '0.025em'
-                  }}
-                >
-                  {purchasingPlan === plan.id ? (
-                    <>
-                      <Zap className="w-4 h-4 mr-3 animate-pulse" style={{ strokeWidth: 2 }} />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      {plan.id === 'exclusive' ? (
-                        <Crown className="w-4 h-4 mr-3" style={{ strokeWidth: 2 }} />
-                      ) : (
-                        <Star className="w-4 h-4 mr-3" style={{ strokeWidth: 2 }} />
-                      )}
-                      Subscribe to {plan.name}
-                    </>
-                  )}
-                </Button>
+                {plan.current ? (
+                  <div className="w-full py-4 text-center text-sm font-medium"
+                       style={{
+                         color: designTokens.colors.sage,
+                         fontFamily: designTokens.typography.body
+                       }}>
+                    Current Plan
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => handlePurchase(plan.id)}
+                    disabled={purchasingPlan === plan.id}
+                    className="w-full py-4 text-sm font-medium tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100"
+                    style={{
+                      background: purchasingPlan === plan.id 
+                        ? designTokens.colors.ash
+                        : plan.id === 'exclusive'
+                          ? `linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)`
+                          : `linear-gradient(135deg, ${designTokens.colors.charcoal} 0%, #1a1a1a 100%)`,
+                      color: designTokens.colors.pure,
+                      borderRadius: designTokens.radius.lg,
+                      boxShadow: purchasingPlan === plan.id 
+                        ? 'none' 
+                        : plan.id === 'exclusive'
+                          ? '0 8px 24px rgba(212, 175, 55, 0.4)'
+                          : designTokens.shadows.lg,
+                      fontFamily: designTokens.typography.body,
+                      letterSpacing: '0.025em'
+                    }}
+                  >
+                    {purchasingPlan === plan.id ? (
+                      <>
+                        <Zap className="w-4 h-4 mr-3 animate-pulse" style={{ strokeWidth: 2 }} />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        {plan.id === 'exclusive' ? (
+                          <Crown className="w-4 h-4 mr-3" style={{ strokeWidth: 2 }} />
+                        ) : (
+                          <Star className="w-4 h-4 mr-3" style={{ strokeWidth: 2 }} />
+                        )}
+                        Upgrade to {plan.name}
+                      </>
+                    )}
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -359,7 +385,7 @@ export default function Upgrade() {
                fontWeight: '400',
                letterSpacing: '0.01em'
              }}>
-            Fitvue offers auto-renewable subscription plans:
+            Fitvue offers a free trial and auto-renewable subscription plans:
           </p>
           
           <ul className="text-sm leading-relaxed space-y-2"
@@ -368,6 +394,7 @@ export default function Upgrade() {
                 fontFamily: designTokens.typography.body,
                 textAlign: 'left'
               }}>
+            <li>• <strong>Free Trial:</strong> Free – includes 3 image generations total</li>
             <li>• <strong>Starter Plan:</strong> $7.99 per month – includes 30 images per month</li>
             <li>• <strong>Premium Plan:</strong> $13.99 per month – includes 60 images per month</li>
             <li>• <strong>Exclusive Plan:</strong> $24.99 per month – includes 120 images per month</li>

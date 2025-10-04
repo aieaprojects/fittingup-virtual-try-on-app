@@ -85,7 +85,9 @@ export default function CreditLimitModal({ isOpen, onClose, creditInfo }: Credit
                  color: designTokens.colors.charcoal,
                  fontFamily: designTokens.typography.body
                }}>
-              You've used all your credits for this plan.
+              {creditInfo?.plan === 'free' 
+                ? "You've used all 3 free trial image generations. Upgrade to continue creating stunning looks!"
+                : "You've used all your credits for this plan."}
             </p>
             
             {creditInfo && (
@@ -100,10 +102,10 @@ export default function CreditLimitModal({ isOpen, onClose, creditInfo }: Credit
                      fontFamily: designTokens.typography.body
                    }}>
                   <span style={{ fontWeight: '500' }}>
-                    {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)} Plan
+                    {creditInfo.plan === 'free' ? 'Free Trial' : creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)} Plan
                   </span>
                   <br />
-                  {creditInfo.credits_used_this_period} / {creditInfo.credits_total} credits used
+                  {creditInfo.credits_used_this_period} / {creditInfo.credits_total} {creditInfo.plan === 'free' ? 'images' : 'credits'} used
                 </p>
               </div>
             )}
