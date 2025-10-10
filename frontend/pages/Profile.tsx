@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, User, Mail, Calendar, Crown, ExternalLink, LogOut, CreditCard, FileText, Shield } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, Crown, ExternalLink, LogOut, CreditCard, FileText, Shield, Trash2 } from 'lucide-react';
 import { designTokens, styleHelpers } from '../styles/design-tokens';
 import { useToast } from '@/components/ui/use-toast';
 import { useBackend } from '../utils/backend';
+import DeleteAccountModal from '../components/DeleteAccountModal';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export default function Profile() {
   const { signOut } = useClerk();
   const { toast } = useToast();
   const backend = useBackend();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Get user's credit info
   const { data: credits } = useQuery({
@@ -36,6 +39,29 @@ export default function Profile() {
         description: "There was an error signing out. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      await backend.auth.deleteData();
+      
+      await signOut();
+      
+      toast({
+        title: "Your account was deleted.",
+        description: "All your data has been permanently removed.",
+      });
+      
+      navigate('/');
+    } catch (error) {
+      console.error('Account deletion error:', error);
+      toast({
+        title: "We couldn't delete your account. Please try again.",
+        variant: "destructive",
+      });
+      setIsDeleting(false);
     }
   };
 
@@ -335,7 +361,29 @@ export default function Profile() {
             <LogOut className="w-5 h-5 mr-3" />
             Sign Out
           </Button>
+
+          <Button
+            onClick={() => setShowDeleteModal(true)}
+            variant="outline"
+            className="w-full py-4 text-base font-medium transition-all duration-300 hover:scale-[1.02]"
+            style={{
+              border: `2px solid ${designTokens.colors.error}50`,
+              borderRadius: designTokens.radius.xl,
+              color: designTokens.colors.error,
+              backgroundColor: `${designTokens.colors.error}08`
+            }}
+          >
+            <Trash2 className="w-5 h-5 mr-3" />
+            Delete Account
+          </Button>
         </div>
+
+        <DeleteAccountModal
+          open={showDeleteModal}
+          onOpenChange={setShowDeleteModal}
+          onConfirm={handleDeleteAccount}
+          isDeleting={isDeleting}
+        />
       </div>
     </div>
   );

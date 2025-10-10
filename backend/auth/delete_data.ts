@@ -1,7 +1,14 @@
 import { api, APIError } from "encore.dev/api";
 import { getAuthData } from "~encore/auth";
+import { createClerkClient } from "@clerk/backend";
+import { secret } from "encore.dev/config";
 import { db } from "../shared/db";
 import { storage } from "../shared/storage";
+
+const clerkSecretKey = secret("ClerkSecretKey");
+const clerkClient = createClerkClient({ 
+  secretKey: clerkSecretKey()
+});
 
 // Deletes all user data for GDPR compliance.
 export const deleteData = api<void, { success: boolean }>(
@@ -55,6 +62,13 @@ export const deleteData = api<void, { success: boolean }>(
           }
         })
       ).catch(err => console.error("Bulk file deletion failed:", err));
+
+      // Delete user from Clerk
+      try {
+        await clerkClient.users.deleteUser(userID);
+      } catch (clerkErr) {
+        console.error("Failed to delete Clerk user:", clerkErr);
+      }
 
       return { success: true };
     } catch (err) {
